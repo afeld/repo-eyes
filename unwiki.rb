@@ -5,14 +5,14 @@
 #
 # then use it like so:
 #
+#   gem install octokit
 #   GITHUB_TOKEN=... USER=... ruby unwiki.rb
 
 require 'octokit'
 
 
-Octokit.auto_paginate = true
 TOKEN = ENV.fetch('GITHUB_TOKEN')
-CLIENT = Octokit::Client.new(access_token: TOKEN)
+CLIENT = Octokit::Client.new(access_token: TOKEN, auto_paginate: true)
 FORCE = !!ENV['FORCE']
 
 
@@ -75,9 +75,6 @@ def remove_wiki_if_empty(repo)
 end
 
 
-USER = ENV.fetch('USER')
-repos = repositories(USER)
-
 if FORCE
   puts "Removing empty wikis..."
 else
@@ -85,6 +82,8 @@ else
 end
 puts "----------------"
 
+USER = ENV.fetch('USER')
+repos = repositories(USER)
 repos.each do |repo|
   remove_wiki_if_empty(repo)
 end
